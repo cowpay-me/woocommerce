@@ -28,7 +28,7 @@ class WC_Payment_Gateway_Cowpay_POS_Fawry extends WC_Payment_Gateway_Cowpay
 
         // If you want to show an image next to the gateway's name on the frontend, enter a URL to an image.
         //$this->icon = plugin_dir_url(__FILE__) . 'LOGO.png';
-        $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/fawry-logo.png';
+        $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/fawry-logo.svg';
 
         // Bool. Can be set to true if you want payment fields to show on the checkout 
         $this->has_fields = false;

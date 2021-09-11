@@ -29,7 +29,7 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         $this->title = esc_html__("Cowpay Credit Card", 'cowpay');
 
         // If you want to show an image next to the gateway's name on the frontend, enter a URL to an image.
-        $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/visa-credit.png';
+        $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/visa.svg';
 
         // Bool. Can be set to true if you want payment fields to show on the checkout 
         // if doing a direct integration, which we are doing in this case
@@ -67,6 +67,7 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
          *    payment_status: "PAID" // or "FAILED"
          *  }
          */
+        var_dump($this->is_valid_otp_response());exit;
         if (!$this->is_valid_otp_response()) return false;
         // get order by reference id
         // TODO?: should we get it from the session instead
@@ -196,7 +197,6 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
     {
         $customer_order = wc_get_order($order_id);
         $request_params = $this->create_payment_request($order_id);
-
         $response = WC_Gateway_Cowpay_API_Handler::get_instance()->charge_cc($request_params);
         $messages = $this->get_user_error_messages($response);
         if (empty($messages)) { // success
@@ -206,11 +206,12 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
             // display to the admin
             $customer_order->add_order_note(__($response->status_description));
 
-            if (isset($response->three_d_secured) && $response->three_d_secured == true) {
+            if (isset($response->token) && $response->token == true) {
                 // TODO: add option to use OTP plugin when return_url is not exist
                 $res = array(
                     'result' => 'success',
-                    'redirect' =>  $response->return_url
+                    'token'=>$response->token,
+                    // 'redirect' =>  $response->return_url
                 );
                 return $res;
             }
@@ -258,10 +259,16 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
      * Renders the credit card form
      * @todo: should use the woo_cowpay_view function (add cc-form.php inside views folder)
      */
+
     public function form()
     {
         wp_enqueue_script('wc-credit-card-form');
         woo_cowpay_view("credit-card-payment-fields"); // have no data right now
+    }
+    public function form__()
+    {
+        wp_enqueue_script('wc-credit-card-form');
+        woo_cowpay_view("credit-card-payment-fields "); // have no data right now
 
         $fields = array();
 
@@ -376,10 +383,11 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
     {
         $host = $this->cp_admin_settings->get_active_host();
         $schema = is_ssl() ? "https" : "http";
-        wp_enqueue_script('cowpay_otp_js', "$schema://$host/js/plugins/OTPPaymentPlugin.js");
-        wp_enqueue_script('cowpay_js', plugin_dir_url(__FILE__) . '/public/js/woo-cowpay-public.js', ['cowpay_otp_js']);
+        wp_enqueue_script('cowpay_card_js', "$schema://$host/js/plugins/CardPlugin.js");
+        // wp_enqueue_script('cowpay_otp_js', "$schema://$host/js/plugins/OTPPaymentPlugin.js");
+        // wp_enqueue_script('cowpay_js', WOO_COWPAY_PLUGIN_URL . 'public/js/woo-cowpay-public.js', ['cowpay_otp_js']);
 
-        wp_enqueue_style('cowpay_public_css', plugin_dir_url(__FILE__) . '/public/css/woo-cowpay-public.css');
+        wp_enqueue_style('cowpay_public_css', WOO_COWPAY_PLUGIN_URL . 'public/css/woo-cowpay-public.css');
 
         // Pass ajax_url to cowpay_js
         // this line will pass `admin_url('admin-ajax.php')` value to be accessed through

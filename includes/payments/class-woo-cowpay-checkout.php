@@ -28,6 +28,8 @@ class WC_Payment_Gateway_Cowpay_Checkout extends WC_Payment_Gateway_Cowpay
         // The title to be used for the vertical tabs that can be ordered top to bottom
         $this->title = esc_html__("Cowpay Checkout", 'cowpay');
 
+        // If you want to show an image next to the gateway's name on the frontend, enter a URL to an image.
+        $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/LOGO.png';
         // Bool. Can be set to true if you want payment fields to show on the checkout 
         // if doing a direct integration, which we are doing in this case
         $this->has_fields = false;

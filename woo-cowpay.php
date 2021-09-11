@@ -16,7 +16,7 @@
  * Plugin Name:       Cowpay For WooCommerce
  * Plugin URI:        https://docs.cowpay.me/plugins/woocommerce/
  * Description:       Extends WooCommerce by Adding the Cowpay payment Gateway.
- * Version:           1.0.0
+ * Version:           2.0.0
  * Author:            Cowpay, support@cowpay.me
  * Author URI:        https://cowpay.me/
  * License:           GPL-2.0+
@@ -24,7 +24,7 @@
  * Text Domain:       woo-cowpay
  * Domain Path:       /languages
  * WC requires at least: 3.0.0
- * WC tested up to: 5.1
+ * WC tested up to: 5.8.1
  */
 
 // If this file is called directly, abort.
@@ -41,7 +41,7 @@ define( 'WOO_COWPAY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  */
-define('WOO_COWPAY_VERSION', '1.0.0');
+define('WOO_COWPAY_VERSION', '2.0.0');
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-woo-cowpay-activator.php
@@ -80,6 +80,25 @@ require plugin_dir_path(__FILE__) . 'includes/class-woo-cowpay.php';
  *
  * @since    1.0.0
  */
+/**
+ * public helper function that can check wordpress version and if woocommece is installed and it`s auto deactive anything is missing
+ */
+function requiremnts_check_list() {
+	global $wp_version;
+	$plugin = plugin_basename( __FILE__ );
+	$woocommerce = plugin_basename( __FILE__ );
+	$plugin_data = get_plugin_data( __FILE__, false );
+	$require_wp = "3.5";
+
+	if ( version_compare( $wp_version, $require_wp, "<" ) && is_plugin_active($plugin)) {
+		deactivate_plugins( $plugin );
+		wp_die( "<strong>".$plugin_data['Name']."</strong> requires <strong>WordPress ".$require_wp."</strong> or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to the WordPress <a href='".get_admin_url(null, 'plugins.php')."'>Plugins page</a>." );
+	}elseif( is_plugin_active($plugin) && !is_plugin_active('woocommerce/woocommerce.php')) {
+		deactivate_plugins( $plugin );
+		wp_die( "<strong>".$plugin_data['Name']."</strong> requires <strong>woocommece </strong> to be activated, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to the WordPress <a href='".get_admin_url(null, 'plugins.php')."'>Plugins page</a>." );
+	}
+}
+add_action( 'admin_init', 'requiremnts_check_list' );
 function run_woo_cowpay()
 {
 

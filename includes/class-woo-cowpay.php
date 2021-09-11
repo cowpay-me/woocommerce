@@ -74,7 +74,7 @@ class WooCowpay
 		if (defined('WOO_COWPAY_VERSION')) {
 			$this->version = WOO_COWPAY_VERSION;
 		} else {
-			$this->version = '1.0.0';
+			$this->version = '2.0.0';
 		}
 		$this->plugin_name = 'woo-cowpay';
 
@@ -103,6 +103,7 @@ class WooCowpay
 	 * @since    1.0.0
 	 * @access   private
 	 */
+	
 	private function load_dependencies()
 	{
 
@@ -210,7 +211,7 @@ class WooCowpay
 	 */
 	public function run()
 	{
-		$this->loader->run();
+		// $this->loader->run();
 	}
 
 	/**
