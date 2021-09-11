@@ -1,0 +1,2 @@
+<input type='text' name='cowpay_settings[YOUR_MERCHANT_HASH]' value='<?php echo esc_html($options['YOUR_MERCHANT_HASH']) ?>'>
+<p><?php esc_html_e('This is the MERCHANT HASH provided by Cowpay when you signed up for an account.', 'cowpay') ?></p>

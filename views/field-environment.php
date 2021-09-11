@@ -1,0 +1,3 @@
+<input id="production" type='radio' name='cowpay_settings[environment]' value='1' <?php checked($options['environment'], 1) ?> /><label for="production">Production</label>
+<input id="staging" type='radio' name='cowpay_settings[environment]' value='2' <?php checked($options['environment'], 2) ?> /><label for="staging">Staging</label>
+<p><?php esc_html_e('Choose enviroment for paymeny getway', 'cowpay') ?></p>

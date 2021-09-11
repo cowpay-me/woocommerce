@@ -1,0 +1,2 @@
+<input type='text' name='cowpay_settings[cowpay_callbackurl]' value='<?php echo esc_url($options['cowpay_callbackurl'] != "" ? $options['cowpay_callbackurl'] : add_query_arg('action', 'cowpay', home_url('/'))) ?>'>
+<p><?php esc_html_e('Please modify "Callback URL" in your Cowpay.me account to:', 'cowpay') ?></p>

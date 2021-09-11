@@ -1,0 +1,2 @@
+<textarea name='cowpay_settings[description]'><?php echo (isset($options['description']) ? stripslashes($options['description']) : '') ?></textarea>
+<p><?php esc_html_e('This is your description.', 'cowpay') ?></p>

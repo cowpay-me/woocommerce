@@ -1,0 +1,2 @@
+<input type='text' name='cowpay_settings[YOUR_AUTHORIZATION_TOKEN]' value='<?php echo esc_html($options['YOUR_AUTHORIZATION_TOKEN']) ?>'>
+<p><?php esc_html_e('This is the AUTHORIZATION TOKEN provided by Cowpay when you signed up for an account.', 'cowpay') ?></p>
