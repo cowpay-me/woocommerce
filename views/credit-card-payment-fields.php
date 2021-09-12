@@ -1,7 +1,7 @@
 <script>
 (function ($) {
     COWPAYOTPDIALOG.init()
-    COWPAYOTPDIALOG.load('ece91a023c7cf8f274c141e82af64d5b') // the token from the charge request response
+    // COWPAYOTPDIALOG.load('b61aea044ef182ea79859f59526b043b') // the token from the charge request response
 })(jQuery);
 
 </script>

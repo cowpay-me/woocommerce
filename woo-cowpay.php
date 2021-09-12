@@ -85,8 +85,10 @@ require plugin_dir_path(__FILE__) . 'includes/class-woo-cowpay.php';
  */
 function requiremnts_check_list() {
 	global $wp_version;
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . '/wp-admin/includes/plugin.php';
+	}
 	$plugin = plugin_basename( __FILE__ );
-	$woocommerce = plugin_basename( __FILE__ );
 	$plugin_data = get_plugin_data( __FILE__, false );
 	$require_wp = "3.5";
 
@@ -101,8 +103,9 @@ function requiremnts_check_list() {
 add_action( 'admin_init', 'requiremnts_check_list' );
 function run_woo_cowpay()
 {
-
+	
 	$plugin = new WooCowpay();
+	requiremnts_check_list();
 	$plugin->run();
 }
 
