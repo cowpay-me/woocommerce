@@ -211,7 +211,7 @@ class WooCowpay
 	 */
 	public function run()
 	{
-		// $this->loader->run();
+		$this->loader->run();
 	}
 
 	/**
