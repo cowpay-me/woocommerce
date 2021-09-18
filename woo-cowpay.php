@@ -64,7 +64,14 @@ function deactivate_woo_cowpay()
 
 register_activation_hook(__FILE__, 'activate_woo_cowpay');
 register_deactivation_hook(__FILE__, 'deactivate_woo_cowpay');
+add_action('wp_ajax_check_otp_response', "check_otp_response");
+ function check_otp_response()
+{
+	$cc = new WC_Payment_Gateway_Cowpay_CC();
 
+	echo json_encode($cc->check_otp_response());
+	wp_die();
+}
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.

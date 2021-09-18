@@ -96,7 +96,7 @@ class WooCowpayPublic {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-cowpay-public.js', array( 'jquery' ), $this->version, false );
+		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/woo-cowpay-public.js', array( 'jquery' ), $this->version, false );
 
 	}
 

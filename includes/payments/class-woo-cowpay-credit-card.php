@@ -42,10 +42,28 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         // when this url is entered, an action is called from WooCommerce => woocommerce_api_<class_name>
         $this->notify_url = WC()->api_request_url('WC_Payment_Gateway_Cowpay_CC');
         // we then register our otp response check for this action, and call $this->check_otp_response()
-        add_action('woocommerce_api_wc_payment_gateway_cowpay_cc', array($this, 'check_otp_response'));
+        add_action('wp_ajax_check_otp_response', array($this, 'check_otp_response'));
+        // add_action('wp_enqueue_scripts','check_otp_response');
 
         parent::init();
     }
+
+    /**
+	 * Get a link to the transaction on the 3rd party gateway site (if applicable).
+	 *
+	 * @param  WC_Order $order the order object.
+	 * @return string transaction URL, or empty string.
+	 */
+	public function get_transaction_url( $order ) {
+
+		$return_url     = '';
+		$transaction_id = $order->get_transaction_id();
+		if ( ! empty( $this->view_transaction_url ) && ! empty( $transaction_id ) ) {
+			$return_url = sprintf( $this->view_transaction_url, $transaction_id );
+		}
+
+		return apply_filters( 'woocommerce_get_transaction_url', $return_url, $order, $this );
+	}
 
     /**
      * Called when $this->notify_url is entered
@@ -67,32 +85,56 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
          *    payment_status: "PAID" // or "FAILED"
          *  }
          */
-        var_dump($this->is_valid_otp_response());exit;
-        if (!$this->is_valid_otp_response()) return false;
+        // var_dump($_POST);exit;
+        // if (!$this->is_valid_otp_response()) return false;
         // get order by reference id
         // TODO?: should we get it from the session instead
-        $cowpay_reference_id = $_GET['cowpay_reference_id'];
-        $payment_status = $_GET['payment_status'];
+        $cowpay_reference_id = $_POST['data']['cowpay_reference_id'];
+        $payment_status = $_POST['data']['payment_status'];
         $order = $this->get_order_by('cp_cowpay_reference_id', $cowpay_reference_id);
         if ($order === false) {
             // order doesn't exit, invalid cowpay reference id, redirect to home
-            wp_safe_redirect(get_home_url());
+            $res = array(
+                'result' => 'success',
+                'message' => 'no order founded',
+                'redirect' =>  get_home_url()
+            );
+            return $res;
+            // wp_safe_redirect(get_home_url());
             exit;
         }
         $order->add_order_note("OTP Status: $payment_status");
         if ($payment_status == 'PAID') {
             WC()->cart->empty_cart();
             // don't complete payment here, only in server-server notification
-            wp_safe_redirect($this->get_return_url($order));
+            $res = array(
+                'result' => 'success',
+                'redirect' =>  $this->get_return_url($order)
+            );
+            return $res;
+            // wp_safe_redirect($this->get_return_url($order));
             exit;
         } else if ($payment_status == 'FAILED' || $payment_status == 'UNPAID') { //? Is UNPAID always means FAILED
             wc_add_notice("Your OTP has failed", 'error');
-            wp_safe_redirect(wc_get_checkout_url());
+            $res = array(
+                'result' => 'error',
+                // 'message' => __('Your OTP has failed')
+                'redirect' =>  wc_get_checkout_url()
+            );
+            return $res;
+            // wp_safe_redirect(wc_get_checkout_url());
             exit;
         } else {
-            wp_safe_redirect(get_home_url());
+            $res = array(
+                'result' => 'success',
+                'redirect' =>  get_home_url()
+            );
+            return $res;
+            // wp_safe_redirect(get_home_url());
             exit;
         }
+        wp_die(); // ajax call must die to avoid trailing 0 in your response
+
     }
 
     private function is_valid_otp_response()
@@ -204,14 +246,13 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
             $this->set_cowpay_meta($customer_order, $request_params, $response);
 
             // display to the admin
-            $customer_order->add_order_note(__($response->status_description));
-
+            $customer_order->add_order_note(__($response->status_description));            
             if (isset($response->token) && $response->token == true) {
+                WC()->session->set( 'tansaction_id' , $response->token );
                 // TODO: add option to use OTP plugin when return_url is not exist
                 $res = array(
                     'result' => 'success',
-                    'token'=>$response->token,
-                    // 'redirect' =>  $response->return_url
+                    'redirect' =>  $this->get_transaction_url($customer_order)
                 );
                 return $res;
             }
@@ -265,84 +306,7 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         wp_enqueue_script('wc-credit-card-form');
         woo_cowpay_view("credit-card-payment-fields"); // have no data right now
     }
-    public function form__()
-    {
-        wp_enqueue_script('wc-credit-card-form');
-        woo_cowpay_view("credit-card-payment-fields "); // have no data right now
-
-        $fields = array();
-
-        $year_field = '<select id="' . esc_attr($this->id) . '-expiry-year" name="' . esc_attr($this->id) . '-expiry-year" class="cowpay_feild input-text  wc-credit-card-form-expiry-year" inputmode="numeric" autocomplete="off" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" maxlength="2" ' . $this->field_name('expiry-year') . ' style="width:100px">
-	    <option value="" disabled="disabled">' . esc_html__("Year", "wpqa") . '</option>';
-        for ($i = 0; $i <= 10; $i++) {
-            $year_field .= '<option value="' . date('y', strtotime('+' . $i . ' year')) . '">' . date('y', strtotime('+' . $i . ' year')) . '</option>';
-        }
-        $year_field .= '</select>';
-
-
-        $cvc_field = '<p class="form-row form-row-last">
-			<label for="' . esc_attr($this->id) . '-card-cvc">' . esc_html__('Card code', 'cowpay') . '&nbsp;<span class="required">*</span></label>
-			<input  id="' . esc_attr($this->id) . '-card-cvc" name="' . esc_attr($this->id) . '-card-cvc" class="cowpay_feild input-text wc-credit-card-form-card-cvc" inputmode="numeric" autocomplete="off" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" maxlength="3" placeholder="' . esc_attr__('CVC', 'cowpay') . '" ' . $this->field_name('card-cvc') . ' style="width:100px" />
-		</p>';
-
-        $default_fields = array(
-            'card-number-field' => '<p class="form-row form-row-wide">
-				<label for="' . esc_attr($this->id) . '-card-number">' . esc_html__('Card number', 'cowpay') . '&nbsp;<span class="required">*</span></label>
-				<input  maxlength="22" id="' . esc_attr($this->id) . '-card-number" name="' . esc_attr($this->id) . '-card-number" class="cowpay_feild input-text wc-credit-card-form-card-number" inputmode="numeric" autocomplete="cc-number" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" ' . $this->field_name('card-number') . ' />
-			</p>',
-            'card-expiry-field' => '<p class="form-row form-row-first">
-			<label for="' . esc_attr($this->id) . '-expiry-month">' . esc_html__('Expiry (MM/YY)', 'cowpay') . '&nbsp;<span class="required">*</span></label>
-			<select id="' . esc_attr($this->id) . '-expiry-month" name="' . esc_attr($this->id) . '-expiry-month" class="cowpay_feild input-text js_field-country wc-credit-card-form-expiry-month" inputmode="numeric" autocomplete="off" autocorrect="no" autocapitalize="no" spellcheck="no" type="tel" maxlength="2" ' . $this->field_name('expiry-month') . ' style="width:100px;float:left;">
-				<option value="" disabled="disabled">' . esc_html__("Month", "wpqa") . '</option>
-				<option value="01">01 - ' . esc_html__("January", "wpqa") . '</option>
-				<option value="02">02 - ' . esc_html__("February", "wpqa") . '</option>
-				<option value="03">03 - ' . esc_html__("March", "wpqa") . '</option>
-				<option value="04">04 - ' . esc_html__("April", "wpqa") . '</option>
-				<option value="05">05 - ' . esc_html__("May", "wpqa") . '</option>
-				<option value="06">06 - ' . esc_html__("June", "wpqa") . '</option>
-				<option value="07">07 - ' . esc_html__("July", "wpqa") . '</option>
-				<option value="08">08 - ' . esc_html__("August", "wpqa") . '</option>
-				<option value="09">09 - ' . esc_html__("September", "wpqa") . '</option>
-				<option value="10">10 - ' . esc_html__("October", "wpqa") . '</option>
-				<option value="11">11 - ' . esc_html__("November", "wpqa") . '</option>
-				<option value="12">12 - ' . esc_html__("December", "wpqa") . '</option>
-			</select>
-			' . $year_field . '
-		</p>',
-        );
-
-        if (!$this->supports('credit_card_form_cvc_on_saved_method')) {
-            $default_fields['card-cvc-field'] = $cvc_field;
-        }
-
-
-        $fields = wp_parse_args($fields, apply_filters('woocommerce_credit_card_form_fields', $default_fields, $this->id));
-?>
-
-        <fieldset id="wc-<?php echo esc_attr($this->id); ?>-cc-form" class='wc-credit-card-form wc-payment-form'>
-            <?php do_action('woocommerce_credit_card_form_start', $this->id); ?>
-
-            <?php
-            foreach ($fields as $field) {
-                echo $field; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-            }
-            ?>
-            <?php do_action('woocommerce_credit_card_form_end', $this->id); ?>
-            <div class="clear"></div>
-
-        </fieldset>
-
-        <?php
-
-        if ($this->supports('credit_card_form_cvc_on_saved_method')) {
-            echo '<fieldset>' . $cvc_field . '</fieldset>'; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
-        }
-        ?>
-        <div id="cowpay-otp-container"></div>
-<?php
-
-    }
-
+   
     /**
      * This function used by WC if $this->has_fields is true.
      * This returns the form that usually contains the credit card data.
@@ -385,13 +349,20 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         $schema = is_ssl() ? "https" : "http";
         wp_enqueue_script('cowpay_card_js', "$schema://$host/js/plugins/CardPlugin.js");
         // wp_enqueue_script('cowpay_otp_js', "$schema://$host/js/plugins/OTPPaymentPlugin.js");
-        // wp_enqueue_script('cowpay_js', WOO_COWPAY_PLUGIN_URL . 'public/js/woo-cowpay-public.js', ['cowpay_otp_js']);
+        wp_enqueue_script('woo-cowpay', WOO_COWPAY_PLUGIN_URL . 'public/js/woo-cowpay-public.js');
 
         wp_enqueue_style('cowpay_public_css', WOO_COWPAY_PLUGIN_URL . 'public/css/woo-cowpay-public.css');
 
         // Pass ajax_url to cowpay_js
         // this line will pass `admin_url('admin-ajax.php')` value to be accessed through
         // plugin_ajax_object.ajax_url in javascipt file with the handle cowpay_js (the one above)
-        wp_localize_script('cowpay_js', 'plugin_ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
+        // wp_localize_script('cowpay_js', 'cowpay_data', array('ajax_url' => admin_url('admin-ajax.php')));
+        wp_localize_script('woo-cowpay', 'cowpay_data', array(
+            'tansaction_id' => WC()->session->get( 'tansaction_id'),
+            'ajax_url' => WC()->ajax_url(),
+            )
+        );
+        WC()->session->__unset( 'tansaction_id' );
+
     }
 }

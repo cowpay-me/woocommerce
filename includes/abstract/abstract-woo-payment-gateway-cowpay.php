@@ -109,12 +109,13 @@ abstract class WC_Payment_Gateway_Cowpay extends WC_Payment_Gateway
         if ($response == null) return;
         // response meta
         $setOrderMeta("cp_cowpay_reference_id", $response->cowpay_reference_id);
-        $is_3ds = isset($response->token) && $response->token;
+        $is_3ds = true;
         $setOrderMeta("cp_is_3ds", $is_3ds);
         if (isset($response->payment_gateway_reference_id)) {
             $setOrderMeta("cp_payment_gateway_reference_id", $response->payment_gateway_reference_id);
         }
-        //TODO: do_action('cowpay_meta_after_update')
+
+        // TODO: do_action('cowpay_meta_after_update')
     }
 
     /**
