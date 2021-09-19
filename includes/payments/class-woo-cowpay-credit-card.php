@@ -106,6 +106,7 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         $order->add_order_note("OTP Status: $payment_status");
         if ($payment_status == 'PAID') {
             WC()->cart->empty_cart();
+            $order->payment_complete();
             // don't complete payment here, only in server-server notification
             $res = array(
                 'result' => 'success',
