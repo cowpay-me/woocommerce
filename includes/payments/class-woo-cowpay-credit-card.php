@@ -104,6 +104,9 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
             exit;
         }
         $order->add_order_note("OTP Status: $payment_status");
+        $request_params = $this->create_payment_request($order->get_id());
+        $this->set_cowpay_meta($order, $request_params, $_POST['data']);
+
         if ($payment_status == 'PAID') {
             WC()->cart->empty_cart();
             $order->payment_complete();
@@ -215,12 +218,6 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         $request_params = array(
             // redirect user to our controller to check otp response
             'return_url' => $this->notify_url,
-
-            'card_number' => $card_number,
-            'cvv' => $cvv,
-            'expiry_month' => $expiry_month,
-            'expiry_year' => $expiry_year,
-
             'merchant_reference_id' => $merchant_ref_id,
             'customer_merchant_profile_id' => $customer_profile_id,
             'customer_name' => $customer_order->get_formatted_billing_full_name(),

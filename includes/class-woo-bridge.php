@@ -61,6 +61,12 @@ class Woo_Bridge
                 'value' => esc_attr($query_vars['cp_merchant_reference_id']),
             );
         }
+        if (!empty($query_vars['payment_gateway_reference_id'])) {
+            $query['meta_query'][] = array(
+                'key' => 'payment_gateway_reference_id',
+                'value' => esc_attr($query_vars['payment_gateway_reference_id']),
+            );
+        }
         if (!empty($query_vars['cp_cowpay_reference_id'])) {
             $query['meta_query'][] = array(
                 'key' => 'cp_cowpay_reference_id',
