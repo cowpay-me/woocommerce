@@ -1,57 +1,69 @@
-## Introduction
-
-Using this plugin provides credit card and fawry payments inside your wordpress website
-
-### Download
-
-The plugin source code could be found on [github](https://github.com/cowpay-me/woocommerce) or click the link directly https://github.com/cowpay-me/woocommerce
-
-### Install the plugin
-
-- Paid WordPress plugins are not listed in the WordPress plugin directory. These plugins cannot be installed using the first method.
-- That’s why WordPress comes with the upload method to install such plugins. We will show you how to install WordPress plugins using the upload option in the admin area.
-- First, you need to download the plugin from the source ```which will be a .zip file```. Next, you need to go to WordPress admin area and visit Plugins » Add New page.
-- After that, click on the ‘Upload Plugin’ button on top of the page.
-- Upload plugin button
-- This will reveal the plugin upload form. Here you need to click on the ```Choose File``` button and select the plugin file you downloaded earlier to your computer.
-- Select plugin ```.zip``` file to upload and install in WordPress
-- After you have selected the file, you need to click on the ```Install Now``` button.
-- WordPress will now upload the plugin file from your computer and install it for you. You will see a success message like this after the installation is finished.
-- Activate plugin
-- Once installed, you need to click on the Activate Plugin link to start using the plugin.
-- You would have to configure the settings to fit your needs. These settings will vary for each plugin therefore we will not be covering that in this post.
-
-### Manual Installation
-
-You should have the WooCommerce plugin installed and active.
-- Extract ```cowpay-wooCommerce-payment.zip``` in the ```/wp-content/plugins/``` directory
-- Activate the plugin through the ```Plugins``` menu in WordPress
-
-### Plugin Configuration
-
-After installation in the same page find cowpay plugin in the installed plugins list and click settings button to
-navigate to the plugin settings form and fill the bellow fields:
-
-- ```Merchant Code:``` found in your api settings page in your cowpay dashboard click [here](https://cowpay.me/login) to login
-  to your dashboard.
-- ```Merchant Hash:``` found in the same previous page
-- ```Description:``` represents the payment name of your charge requests in your dashboard reports
-- ```Order Status:``` This one represents the order status after marked as paid
-
-### Callback URL
-
-before saving the previous changes please copy the generated callback url from the plugin settings page and paste it in
-the callback url input in your cowpay dashboard API settings page. 
-
-
- 
 === Cowpay For WooCommerce ===
+
+Accepts credit cards, Pay At Fawry using Cowpay services
+
+== Description ==
+COWPAY is a premium payment technology enabler dedicated to helping businesses transform   
+their operation collecting , splitting , and disbursing money digitally!
+
+Cowpay offers the following Environment options:
+1. **Staging Environment**: Staging is your initial account environment on which you must do your testing operations without your cards being charged.
+2. **Production Environment**: This is the your actual environment, you should put your website into production before deploying.
+
+You can charge your customers using these methods:
+1. Credit Card
+2. Pay At Fawry
+3. Cowpay Checkout
+
+You should enable these methods in the WooCommerce payments settings.
+
+== Install a Plugin using the WordPress Admin Plugin Upload ==
+
+1. Paid WordPress plugins are not listed in the WordPress plugin directory. These plugins cannot be installed using the first method.
+2. That’s why WordPress comes with the upload method to install such plugins. We will show you how to install WordPress plugins using the upload option in the admin area.
+3. First, you need to download the plugin from the source (which will be a zip file). Next, you need to go to WordPress admin area and visit Plugins » Add New page.
+4. After that, click on the ‘Upload Plugin’ button on top of the page.
+5. Upload plugin button
+6. This will reveal the plugin upload form. Here you need to click on the ‘Choose File’ button and select the plugin file you downloaded earlier to your computer.
+7. Select plugin zip file to upload and install in WordPress
+8. After you have selected the file, you need to click on the ‘Install Now’ button.
+9. WordPress will now upload the plugin file from your computer and install it for you. You will see a success message like this after the installation is finished.
+10. Activate plugin
+11. Once installed, you need to click on the Activate Plugin link to start using the plugin.
+12. You would have to configure the settings to fit your needs. These settings will vary for each plugin therefore we will not be covering that in this post.
+
+== Manual Installation ==
+You should have the WooCommerce plugin installed and active.
+1. Extract `cowpay-wooCommerce-payment.zip` in the `/wp-content/plugins/` directory
+2. Activate the plugin through the 'Plugins' menu in WordPress
+
+== Frequently Asked Questions ==
+= How to generate signature? =
+Signatures are validation tokens used by cowpay to insure the identity of the merchant beside authentication tokens starting from API v1
+
+= What is merchant_reference_id Key? =
+Cowpay requires a unique id for each charge request from the merchant as each charge request represents a separated order on our system. You can use numbers, strings or combination of both.
+
+= How to get customer_merchant_reference_id? =
+Cowpay requires customer being charged id on the merchant system. It's value valid format is the same of merchant_reference_id.
+
+= How to go live within my account? =
+Your initial account status is staging which means no actual amounts being paid or charged based on your requests. In order to go live please contact one of our business team, and they will take care of that transmission.
+
+== Screenshots ==
+
+1. Admin, Cowpay settings.
+2. Accepts Fawry POS
+3. Accepts credit card
+4. Credit Card OTP (one time password) redirection
+5. Example Order Notes
+
+== Tags ==
 Contributors: ammarrabie
-Tags: fintech, payment, cash collection, Cowpay, credit card, fawry, PayAtFawry
+Tags: cowpay, credit card, fawry, PayAtFawry
 Requires at least: 5.0
 Tested up to: 5.7
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-
