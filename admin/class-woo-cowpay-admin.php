@@ -84,6 +84,14 @@ class WooCowpayAdmin
 		);
 		add_submenu_page(
 			'cowpay_setting', // parent slug, this should match menu slug in the above line
+			esc_html__('Cash Collection', 'cowpay'),  // page title
+			esc_html__('Cash Collection', 'cowpay'), // this sub menu title
+			'manage_options', // capability, current user role should have this permission
+			'cash_collection', // menu slug, used as url param by wordpress
+			array($this, 'render_cash_collection_settings') // callback when clicked, we redirect to WooCommerce settings
+		);
+		add_submenu_page(
+			'cowpay_setting', // parent slug, this should match menu slug in the above line
 			esc_html__('Pay at Fawry', 'cowpay'),  // page title
 			esc_html__('Pay at Fawry', 'cowpay'), // this sub menu title
 			'manage_options', // capability, current user role should have this permission
@@ -109,6 +117,14 @@ class WooCowpayAdmin
 		// just redirect to credit card WooCommerce tab.
 		//* section value should match the id of the payment method
 		wp_safe_redirect(admin_url("admin.php?page=wc-settings&tab=checkout&section=cowpay_credit_card"));
+		die();
+	}
+
+	function render_cash_collection_settings()
+	{
+		// just redirect to credit card WooCommerce tab.
+		//* section value should match the id of the payment method
+		wp_safe_redirect(admin_url("admin.php?page=wc-settings&tab=checkout&section=cowpay_cash_collection"));
 		die();
 	}
 

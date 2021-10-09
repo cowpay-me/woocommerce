@@ -4,9 +4,9 @@
 
 
 /**
- * Cowpay Payment Gateway for credit card method
+ * Cowpay Payment Gateway for Cash Collection method
  */
-class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
+class WC_Payment_Gateway_Cowpay_Cash_Collection extends WC_Payment_Gateway_Cowpay
 {
 
     public $notify_url;
@@ -17,16 +17,16 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         parent::__construct();
 
         // The global ID for this Payment method
-        $this->id = "cowpay_credit_card";
+        $this->id = "cowpay_cash_collection";
 
         // The Title shown on the top of the Payment Gateways Page next to all the other Payment Gateways
-        $this->method_title = esc_html__("Cowpay Credit Card", 'cowpay');
+        $this->method_title = esc_html__("Cowpay Cash Collection", 'cowpay');
 
         // The description for this Payment Gateway, shown on the actual Payment options page on the backend
-        $this->method_description = esc_html__("Cowpay Credit Card Payment Gateway for WooCommerce", 'cowpay');
+        $this->method_description = esc_html__("Cowpay Cash Collection Payment Gateway for WooCommerce", 'cowpay');
 
         // The title to be used for the vertical tabs that can be ordered top to bottom
-        $this->title = esc_html__("Cowpay Credit Card", 'cowpay');
+        $this->title = esc_html__("Cowpay Cash Collection", 'cowpay');
 
         // If you want to show an image next to the gateway's name on the frontend, enter a URL to an image.
         $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/visa.svg';
@@ -35,14 +35,12 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         // if doing a direct integration, which we are doing in this case
         $this->has_fields = true;
 
-        // register required scripts for credit card payment method
+        // register required scripts for Cash Collection payment method
         add_action('wp_enqueue_scripts', array($this, 'cowpay_enqueue_scripts'));
 
         // get notify url for our payment.
         // when this url is entered, an action is called from WooCommerce => woocommerce_api_<class_name>
-        $this->notify_url = WC()->api_request_url('WC_Payment_Gateway_Cowpay_CC');
-        // we then register our otp response check for this action, and call $this->check_otp_response()
-        add_action('wp_ajax_check_otp_response', array($this, 'check_otp_response'));
+        $this->notify_url = WC()->api_request_url('WC_Payment_Gateway_Cowpay_Cash_Collection');
         // add_action('wp_enqueue_scripts','check_otp_response');
 
         parent::init();
@@ -65,98 +63,6 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
 		return apply_filters( 'woocommerce_get_transaction_url', $return_url, $order, $this );
 	}
 
-    /**
-     * Called when $this->notify_url is entered
-     * check otp response and redirect user to corresponding page
-     */
-    public function check_otp_response()
-    {
-        // check otp response cline-side
-        //* @security this should not complete the payment until confirmation from server-to-server validation
-
-        // from cowpay docs, otp response contains these params
-        /**
-         * {
-         *    callback_type: "order_status_update",
-         *    cowpay_reference_id: "1000242",
-         *    message_source: "cowpay",
-         *    message_type: "cowpay_browser_callback",
-         *    payment_gateway_reference_id: "971498564",
-         *    payment_status: "PAID" // or "FAILED"
-         *  }
-         */
-        // var_dump($_POST);exit;
-        // if (!$this->is_valid_otp_response()) return false;
-        // get order by reference id
-        // TODO?: should we get it from the session instead
-        $cowpay_reference_id = $_POST['data']['cowpay_reference_id'];
-        $payment_status = $_POST['data']['payment_status'];
-        $order = $this->get_order_by('cp_cowpay_reference_id', $cowpay_reference_id);
-        if ($order === false) {
-            // order doesn't exit, invalid cowpay reference id, redirect to home
-            $res = array(
-                'result' => 'success',
-                'message' => 'no order founded',
-                'redirect' =>  get_home_url()
-            );
-            return $res;
-            // wp_safe_redirect(get_home_url());
-            exit;
-        }
-        $order->add_order_note("OTP Status: $payment_status");
-        $request_params = $this->create_payment_request($order->get_id());
-        $this->set_cowpay_meta($order, $request_params, $_POST['data']);
-
-        if ($payment_status == 'PAID') {
-            WC()->cart->empty_cart();
-            $order->payment_complete();
-            // don't complete payment here, only in server-server notification
-            $res = array(
-                'result' => 'success',
-                'redirect' =>  $this->get_return_url($order)
-            );
-            return $res;
-            // wp_safe_redirect($this->get_return_url($order));
-            exit;
-        } else if ($payment_status == 'FAILED' || $payment_status == 'UNPAID') { //? Is UNPAID always means FAILED
-            wc_add_notice("Your OTP has failed", 'error');
-            $res = array(
-                'result' => 'error',
-                // 'message' => __('Your OTP has failed')
-                'redirect' =>  wc_get_checkout_url()
-            );
-            return $res;
-            // wp_safe_redirect(wc_get_checkout_url());
-            exit;
-        } else {
-            $res = array(
-                'result' => 'success',
-                'redirect' =>  get_home_url()
-            );
-            return $res;
-            // wp_safe_redirect(get_home_url());
-            exit;
-        }
-        wp_die(); // ajax call must die to avoid trailing 0 in your response
-
-    }
-
-    private function is_valid_otp_response()
-    {
-        return isset($_GET['callback_type'])
-            && $_GET['callback_type'] == "order_status_update"
-            && isset($_GET['cowpay_reference_id']);
-    }
-
-    /**
-     * Find order where order[$key] = $value.
-     */
-    private function get_order_by($key, $value)
-    {
-        $order = wc_get_orders(array($key => $value, 'limit' => 1));
-        if (empty($order)) return false;
-        return $order[0];
-    }
 
     /**
      * Build the administration fields for this specific Gateway
@@ -176,13 +82,13 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
                 'title'        => esc_html__('Title', 'cowpay'),
                 'type'        => 'text',
                 'desc_tip'    => esc_html__('Payment title the customer will see during the checkout process.', 'cowpay'),
-                'default'    => esc_html__('Credit card', 'cowpay'),
+                'default'    => esc_html__('Cash Collection', 'cowpay'),
             ),
             'description' => array(
                 'title'        => esc_html__('Description', 'cowpay'),
                 'type'        => 'textarea',
                 'desc_tip'    => esc_html__('Payment description the customer will see during the checkout process.', 'cowpay'),
-                'default'    => esc_html__('Pay securely using your credit card.', 'cowpay'),
+                'default'    => esc_html__('Pay securely using your Cash Collection.', 'cowpay'),
                 'css'        => 'max-width:350px;'
             ),
         );
@@ -190,7 +96,7 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
 
 
     /**
-     * builds the credit card request params
+     * builds the Cash Collection request params
      */
     private function create_payment_request($order_id)
     {
@@ -202,7 +108,12 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         $description = $this->get_cp_description($customer_order);
         $amount = $customer_order->get_total(); // TODO: format it like 10.00;
         $signature = $this->get_cp_signature($amount, $merchant_ref_id, $customer_profile_id);
-
+        $floor = $_POST['cowpay_cash_collection-floor'];
+        $appartment = $_POST['cowpay_cash_collection-appartment'];
+        $city_code = $this->get_city_code($customer_order);
+        if(!$city_code){
+            // return error 
+        }
         $request_params = array(
             // redirect user to our controller to check otp response
             'return_url' => $this->notify_url,
@@ -211,11 +122,46 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
             'customer_name' => $customer_order->get_formatted_billing_full_name(),
             'customer_email' => $customer_order->get_billing_email(),
             'customer_mobile' => $customer_order->get_billing_phone(),
+            'address'=>$customer_order->get_billing_address_1(),
+            'district'=>$customer_order->get_billing_city(),
+            'apartment'=>$appartment,
+            'floor'=>$floor,
+            'city_code'=>$city_code,
             'amount' => $amount,
             'signature' => $signature,
             'description' => $description
         );
         return $request_params;
+    }
+    public function get_city_code($order)
+    {
+        $avilableCountries = [
+            "EGC" => "EG-01", //cairo => Downtown Cairo
+            "EGGZ"=>"EG-01", //Giza & Haram	=> Giza
+            "EGALX"=>"EG-02", //Downtown Alex => Downtown Alexandria
+            // ""=>"EG-03", //Sahel => Sahel
+            "EGBH"=>"EG-04", //Behira => Damanhour
+            "EGDK"=>"EG-05", //Dakahlia => Al Mansoura
+            "EGKB"=>"EG-06", //El Kalioubia	=> Sheben Alkanater
+            "EGGH"=>"EG-07", //Gharbia => Tanta
+            "EGKFS"=>"EG-08", //Kafr Alsheikh => Kafr Alsheikh
+            "EGMNF"=>"EG-09", //Monufia => Shebin El Koom
+            "EGSHR"=>"EG-10", //Sharqia => Zakazik
+            "EGIS"=>"EG-11", //Isamilia => Hay 1
+            "EGSUZ"=>"EG-12", //Suez => Al Suez District
+            "EGPTS"=>"EG-13", //Port Said => Sharq
+            "EGDT"=>"EG-14", //Damietta => Damietta
+            "EGFYM"=>"EG-15", //Fayoum => Fayoum
+            "EGBNS"=>"EG-16", //Bani Suif => Bani Suif
+            "EGAST"=>"EG-17", //Asyut => Asyut
+            "EGSHG"=>"EG-18", //Sohag => Sohag
+            "EGMN"=>"EG-19", //Menya => Menya
+            "EGKN"=>"EG-20", //Qena => Qena
+            "EGASN"=>"EG-21", //Aswan => Aswan
+            "EGLX"=>"EG-22", //Luxor => Luxor
+        ];
+        $avilableKeys = array_keys($avilableCountries);
+        return in_array($order->get_billing_state(),$avilableKeys)?$avilableCountries[$order->get_billing_state()]:false;
     }
 
     /**
@@ -224,8 +170,9 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
     public function process_payment($order_id)
     {
         $customer_order = wc_get_order($order_id);
+        // create request 
         $request_params = $this->create_payment_request($order_id);
-        $response = WC_Gateway_Cowpay_API_Handler::get_instance()->charge_cc($request_params);
+        $response = WC_Gateway_Cowpay_API_Handler::get_instance()->charge_cash_collection($request_params);
         $messages = $this->get_user_error_messages($response);
         if (empty($messages)) { // success
             // update order meta
@@ -233,19 +180,10 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
 
             // display to the admin
             $customer_order->add_order_note(__($response->status_description));            
-            if (isset($response->token) && $response->token == true) {
-                WC()->session->set( 'tansaction_id' , $response->token );
-                // TODO: add option to use OTP plugin when return_url is not exist
-                $res = array(
-                    'result' => 'success',
-                    'redirect' =>  $this->get_transaction_url($customer_order)
-                );
-                return $res;
-            }
             // not 3DS:
             WC()->cart->empty_cart();
             // wait server-to-server notification
-            //// $customer_order->payment_complete();
+            $customer_order->update_status( 'pending' );
 
             // Redirect to thank you page
             return array(
@@ -283,33 +221,33 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
 
 
     /**
-     * Renders the credit card form
+     * Renders the Cash Collection form
      * @todo: should use the woo_cowpay_view function (add cc-form.php inside views folder)
      */
 
-    // public function form()
-    // {
-    //     wp_enqueue_script('wc-credit-card-form');
-    //     woo_cowpay_view("credit-card-payment-fields"); // have no data right now
-    // }
+    public function form()
+    {
+        // wp_enqueue_script('wc-cash-collection-form');
+        woo_cowpay_view("cash-collection-payment-fields"); // have no data right now
+    }
    
     /**
      * This function used by WC if $this->has_fields is true.
-     * This returns the form that usually contains the credit card data.
+     * This returns the form that usually contains the Cash Collection data.
      */
     public function payment_fields()
     {
-        echo "<p>Pay securely using your credit card.</p>";
+        // echo "<p>Pay securely using your Cash Collection.</p>";
         if ($this->supports('tokenization') && is_checkout()) {
             $this->tokenization_script();
             $this->saved_payment_methods();
-            // $this->form();
+            $this->form();
             $this->save_payment_method_checkbox();
         } else {
-            // $this->form();
+            $this->form();
         }
-        // echo '<style> .form-row.woocommerce-SavedPaymentMethods-saveNew {
-    	// display: none !important;}</style>';
+        echo '<style> .form-row.woocommerce-SavedPaymentMethods-saveNew {
+    	display: none !important;}</style>';
     }
 
     // Validate fields
@@ -343,12 +281,6 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         // this line will pass `admin_url('admin-ajax.php')` value to be accessed through
         // plugin_ajax_object.ajax_url in javascipt file with the handle cowpay_js (the one above)
         // wp_localize_script('cowpay_js', 'cowpay_data', array('ajax_url' => admin_url('admin-ajax.php')));
-        wp_localize_script('woo-cowpay', 'cowpay_data', array(
-            'tansaction_id' => WC()->session->get( 'tansaction_id'),
-            'ajax_url' => WC()->ajax_url(),
-            )
-        );
-        WC()->session->__unset( 'tansaction_id' );
-
+        
     }
 }

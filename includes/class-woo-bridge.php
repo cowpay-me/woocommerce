@@ -26,6 +26,7 @@ class Woo_Bridge
         require_once(__DIR__ . "/abstract/abstract-woo-payment-gateway-cowpay.php");
         require_once(__DIR__ . "/payments/class-woo-cowpay-pos-fawry.php");
         require_once(__DIR__ . "/payments/class-woo-cowpay-credit-card.php");
+        require_once(__DIR__ . "/payments/class-woo-cowpay-cash-collection.php");
         // require_once(__DIR__ . "/payments/class-woo-cowpay-checkout.php");
 
         require_once(__DIR__ . "/rest_api/class-woo-cowpay-api.php");
@@ -42,6 +43,8 @@ class Woo_Bridge
         $methods[] = 'WC_Payment_Gateway_Cowpay_POS_Fawry';
         /** @see WC_Payment_Gateway_Cowpay_CC*/
         $methods[] = 'WC_Payment_Gateway_Cowpay_CC';
+        /** @see WC_Payment_Gateway_Cowpay_Cash_Collection*/
+        $methods[] = 'WC_Payment_Gateway_Cowpay_Cash_Collection';
         /** @see WC_Payment_Gateway_Cowpay_Checkout*/
         // $methods[] = 'WC_Payment_Gateway_Cowpay_Checkout';
         return $methods;
