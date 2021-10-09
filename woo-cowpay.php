@@ -101,10 +101,10 @@ function requiremnts_check_list() {
 
 	if ( version_compare( $wp_version, $require_wp, "<" ) && is_plugin_active($plugin)) {
 		deactivate_plugins( $plugin );
-		wp_die( "<strong>".$plugin_data['Name']."</strong> requires <strong>WordPress ".$require_wp."</strong> or higher, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to the WordPress <a href='".get_admin_url(null, 'plugins.php')."'>Plugins page</a>." );
+		wp_die( "<strong>".$plugin_data['Name']."</strong> ".__("requires",'woo-cowpay')." <strong>WordPress ".$require_wp."</strong> ".__("or higher, and has been deactivated! Please upgrade WordPress and try again.",'woo-cowpay')."<br /><br />".__("Back to the",'woo-cowpay')." WordPress <a href='".get_admin_url(null, 'plugins.php')."'>".__("Plugins page",'woo-cowpay')."</a>." );
 	}elseif( is_plugin_active($plugin) && !is_plugin_active('woocommerce/woocommerce.php')) {
 		deactivate_plugins( $plugin );
-		wp_die( "<strong>".$plugin_data['Name']."</strong> requires <strong>woocommece </strong> to be activated, and has been deactivated! Please upgrade WordPress and try again.<br /><br />Back to the WordPress <a href='".get_admin_url(null, 'plugins.php')."'>Plugins page</a>." );
+		wp_die( "<strong>".$plugin_data['Name']."</strong> ".__("requires",'woo-cowpay')." <strong>woocommece </strong> ".__("to be activated, and has been deactivated! Please upgrade WordPress and try again.",'woo-cowpay')."<br /><br />Back to the WordPress <a href='".get_admin_url(null, 'plugins.php')."'>".__("Plugins page","woo-cowpay")."</a>." );
 	}
 }
 add_action( 'admin_init', 'requiremnts_check_list' );

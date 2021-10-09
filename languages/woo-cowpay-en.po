@@ -1,0 +1,87 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cowpay\n"
+"POT-Creation-Date: 2021-10-09 04:02+0200\n"
+"PO-Revision-Date: 2021-10-09 05:04+0200\n"
+"Last-Translator: \n"
+"Language-Team: cowpay team\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: woo-cowpay\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# cashcollection
+msgid "Cowpay Cash Collection"
+msgstr "Cowpay Cash Collection"
+
+msgid "Cowpay Cash Collection Payment Gateway for WooCommerce"
+msgstr "Cowpay Cash Collection Payment Gateway for WooCommerce"
+
+msgid "Enable / Disable"
+msgstr "Enable / Disable"
+
+msgid "Enable this payment gateway"
+msgstr "Enable this payment gateway"
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Payment title the customer will see during the checkout process."
+msgstr "Payment title the customer will see during the checkout process."
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Payment description the customer will see during the checkout process."
+msgstr "Payment description the customer will see during the checkout process."
+
+msgid "Pay securely using your Cash Collection."
+msgstr "Pay securely using your Cash Collection."
+
+msgid "this payment method dose not support this area"
+msgstr "this payment method dose not support this area"
+
+msgid "server callback update: created at the server"
+msgstr "server callback update: created at the server"
+
+msgid "server callback update: Successfully paid"
+msgstr "server callback update: Successfully paid"
+
+msgid "server callback update: The order was expired"
+msgstr "server callback update: The order was expired"
+
+msgid "server callback update: The order was failed"
+msgstr "server callback update: The order was failed"
+
+# credit card
+#, fuzzy
+msgid "Cowpay Credit Card"
+msgstr "Cowpay Credit Card"
+
+msgid "Cowpay Credit Card Payment Gateway for WooCommerce"
+msgstr "Cowpay Credit Card Payment Gateway for WooCommerce"
+
+msgid "Pay securely using your credit card."
+msgstr "Pay securely using your credit card."
+
+# Fawry
+msgid "Cowpay Pay at Fawry"
+msgstr "Cowpay Pay at Fawry"
+
+msgid "Cowpay Pay Using Cash at Fawry Payment Gateway for WooCommerce"
+msgstr "Cowpay Pay Using Cash at Fawry Payment Gateway for WooCommerce"
+
+msgid "Cowpay POS Fawry"
+msgstr "Cowpay POS Fawry"
+
+msgid "Pay using Fawry reference code."
+msgstr "Pay using Fawry reference code."
+
+# generale
+msgid "Server Error, empty response"
+msgstr "Server Error, empty response"

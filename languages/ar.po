@@ -1,0 +1,86 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cowpay\n"
+"POT-Creation-Date: 2021-10-09 04:02+0200\n"
+"PO-Revision-Date: 2021-10-09 04:49+0200\n"
+"Last-Translator: \n"
+"Language-Team: cowpay team\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: woo-cowpay\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# cashcollection
+msgid "Cowpay Cash Collection"
+msgstr "التحصيل النقدي cowpay"
+
+msgid "Cowpay Cash Collection Payment Gateway for WooCommerce"
+msgstr "بوابة الدفع النقدي لتحصيل cowpay ل WooCommerce"
+
+msgid "Enable / Disable"
+msgstr "تمكين / تعطيل"
+
+msgid "Enable this payment gateway"
+msgstr "تفعيل بوابة الدفع"
+
+msgid "Title"
+msgstr "العنوان"
+
+msgid "Payment title the customer will see during the checkout process."
+msgstr "عنوان بوابة الدفع الذي سيراه الزبون أثناء عملية الدفع."
+
+msgid "Description"
+msgstr "الوصف"
+
+msgid "Payment description the customer will see during the checkout process."
+msgstr "وصف بوابة الدفع الذي سيراه الزبون في صفحة الدفع."
+
+msgid "Pay securely using your Cash Collection."
+msgstr "ادفع بشكل آمن باستخدام التحصيل النقدي."
+
+msgid "this payment method dose not support this area"
+msgstr "طريقة الدفع هذه لا تدعم هذا المجال"
+
+msgid "server callback update: created at the server"
+msgstr "تحديث رد الاتصال بالخادم: تم إنشاؤه على الخادم"
+
+msgid "server callback update: Successfully paid"
+msgstr "تحديث رد الاتصال بالخادم: تم الدفع بنجاح"
+
+msgid "server callback update: The order was expired"
+msgstr "تحديث رد الاتصال بالخادم: انتهت صلاحية الطلب"
+
+msgid "server callback update: The order was failed"
+msgstr "تحديث رد الاتصال بالخادم: فشل الطلب"
+
+# credit card
+msgid "Cowpay Credit Card"
+msgstr "بطاقة الائتمان Cowpay"
+
+msgid "Cowpay Credit Card Payment Gateway for WooCommerce"
+msgstr "بوابة الدفع ببطاقة الائتمان Cowpay لـ WooCommerce"
+
+msgid "Pay securely using your credit card."
+msgstr "ادفع بأمان باستخدام بطاقتك الائتمانية."
+
+# Fawry
+msgid "Cowpay Pay at Fawry"
+msgstr "دفع Cowpay في Fawry"
+
+msgid "Cowpay Pay Using Cash at Fawry Payment Gateway for WooCommerce"
+msgstr "Cowpay للدفع نقدًا في Fawry Payment Gateway لـ WooCommerce"
+
+msgid "Cowpay POS Fawry"
+msgstr "Cowpay POS فوري"
+
+msgid "Pay using Fawry reference code."
+msgstr "ادفع باستخدام رمز فوري المرجعي."
+
+# generale
+msgid "Server Error, empty response"
+msgstr "خطأ في الخادم ، استجابة فارغة"

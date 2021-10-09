@@ -18,13 +18,13 @@ class WC_Payment_Gateway_Cowpay_POS_Fawry extends WC_Payment_Gateway_Cowpay
         $this->id = "cowpay_payat_fawry";
 
         // The Title shown on the top of the Payment Gateways Page next to all the other Payment Gateways
-        $this->method_title = esc_html__("Cowpay Pay at Fawry", 'cowpay');
+        $this->method_title = esc_html__("Cowpay Pay at Fawry", 'woo-cowpay');
 
         // The description for this Payment Gateway, shown on the actual Payment options page on the backend
-        $this->method_description = esc_html__("Cowpay Pay Using Cash at Fawry Payment Gateway for WooCommerce", 'cowpay');
+        $this->method_description = esc_html__("Cowpay Pay Using Cash at Fawry Payment Gateway for WooCommerce", 'woo-cowpay');
 
         // The title to be used for the vertical tabs that can be ordered top to bottom
-        $this->title = esc_html__("Cowpay POS Fawry", 'cowpay');
+        $this->title = esc_html__("Cowpay POS Fawry", 'woo-cowpay');
 
         // If you want to show an image next to the gateway's name on the frontend, enter a URL to an image.
         //$this->icon = plugin_dir_url(__FILE__) . 'LOGO.png';
@@ -51,22 +51,22 @@ class WC_Payment_Gateway_Cowpay_POS_Fawry extends WC_Payment_Gateway_Cowpay
     {
         $this->form_fields = array(
             'enabled' => array(
-                'title'        => __('Enable / Disable', 'cowpay'),
-                'label'        => __('Enable this payment gateway', 'cowpay'),
+                'title'        => __('Enable / Disable', 'woo-cowpay'),
+                'label'        => __('Enable this payment gateway', 'woo-cowpay'),
                 'type'        => 'checkbox',
                 'default'    => 'no',
             ),
             'title' => array(
-                'title'        => __('Title', 'cowpay'),
+                'title'        => __('Title', 'woo-cowpay'),
                 'type'        => 'text',
-                'desc_tip'    => __('Payment title the customer will see during the checkout process.', 'cowpay'),
-                'default'    => __('Pay at Fawry', 'cowpay'),
+                'desc_tip'    => __('Payment title the customer will see during the checkout process.', 'woo-cowpay'),
+                'default'    => __('Pay at Fawry', 'woo-cowpay'),
             ),
             'description' => array(
-                'title'        => __('Description', 'cowpay'),
+                'title'        => __('Description', 'woo-cowpay'),
                 'type'        => 'textarea',
-                'desc_tip'    => __('Payment description the customer will see during the checkout process.', 'cowpay'),
-                'default'    => __('Pay using Fawry reference code.', 'cowpay'),
+                'desc_tip'    => __('Payment description the customer will see during the checkout process.', 'woo-cowpay'),
+                'default'    => __('Pay using Fawry reference code.', 'woo-cowpay'),
                 'css'        => 'max-width:350px;'
             ),
         );

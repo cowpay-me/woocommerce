@@ -20,13 +20,13 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
         $this->id = "cowpay_credit_card";
 
         // The Title shown on the top of the Payment Gateways Page next to all the other Payment Gateways
-        $this->method_title = esc_html__("Cowpay Credit Card", 'cowpay');
+        $this->method_title = esc_html__("Cowpay Credit Card", 'woo-cowpay');
 
         // The description for this Payment Gateway, shown on the actual Payment options page on the backend
-        $this->method_description = esc_html__("Cowpay Credit Card Payment Gateway for WooCommerce", 'cowpay');
+        $this->method_description = esc_html__("Cowpay Credit Card Payment Gateway for WooCommerce", 'woo-cowpay');
 
         // The title to be used for the vertical tabs that can be ordered top to bottom
-        $this->title = esc_html__("Cowpay Credit Card", 'cowpay');
+        $this->title = esc_html__("Cowpay Credit Card", 'woo-cowpay');
 
         // If you want to show an image next to the gateway's name on the frontend, enter a URL to an image.
         $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/visa.svg';
@@ -141,13 +141,6 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
 
     }
 
-    private function is_valid_otp_response()
-    {
-        return isset($_GET['callback_type'])
-            && $_GET['callback_type'] == "order_status_update"
-            && isset($_GET['cowpay_reference_id']);
-    }
-
     /**
      * Find order where order[$key] = $value.
      */
@@ -167,22 +160,22 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
     {
         $this->form_fields = array(
             'enabled' => array(
-                'title'        => esc_html__('Enable / Disable', 'cowpay'),
-                'label'        => esc_html__('Enable this payment gateway', 'cowpay'),
+                'title'        => esc_html__('Enable / Disable', 'woo-cowpay'),
+                'label'        => esc_html__('Enable this payment gateway', 'woo-cowpay'),
                 'type'        => 'checkbox',
                 'default'    => 'no',
             ),
             'title' => array(
-                'title'        => esc_html__('Title', 'cowpay'),
+                'title'        => esc_html__('Title', 'woo-cowpay'),
                 'type'        => 'text',
-                'desc_tip'    => esc_html__('Payment title the customer will see during the checkout process.', 'cowpay'),
-                'default'    => esc_html__('Credit card', 'cowpay'),
+                'desc_tip'    => esc_html__('Payment title the customer will see during the checkout process.', 'woo-cowpay'),
+                'default'    => esc_html__('Credit card', 'woo-cowpay'),
             ),
             'description' => array(
-                'title'        => esc_html__('Description', 'cowpay'),
+                'title'        => esc_html__('Description', 'woo-cowpay'),
                 'type'        => 'textarea',
-                'desc_tip'    => esc_html__('Payment description the customer will see during the checkout process.', 'cowpay'),
-                'default'    => esc_html__('Pay securely using your credit card.', 'cowpay'),
+                'desc_tip'    => esc_html__('Payment description the customer will see during the checkout process.', 'woo-cowpay'),
+                'default'    => esc_html__('Pay securely using your credit card.', 'woo-cowpay'),
                 'css'        => 'max-width:350px;'
             ),
         );
@@ -287,11 +280,11 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
      * @todo: should use the woo_cowpay_view function (add cc-form.php inside views folder)
      */
 
-    // public function form()
-    // {
+    public function form()
+    {
     //     wp_enqueue_script('wc-credit-card-form');
-    //     woo_cowpay_view("credit-card-payment-fields"); // have no data right now
-    // }
+        woo_cowpay_view("credit-card-payment-fields"); // have no data right now
+    }
    
     /**
      * This function used by WC if $this->has_fields is true.
@@ -299,17 +292,14 @@ class WC_Payment_Gateway_Cowpay_CC extends WC_Payment_Gateway_Cowpay
      */
     public function payment_fields()
     {
-        echo "<p>Pay securely using your credit card.</p>";
         if ($this->supports('tokenization') && is_checkout()) {
             $this->tokenization_script();
             $this->saved_payment_methods();
-            // $this->form();
+            $this->form();
             $this->save_payment_method_checkbox();
         } else {
-            // $this->form();
+            $this->form();
         }
-        // echo '<style> .form-row.woocommerce-SavedPaymentMethods-saveNew {
-    	// display: none !important;}</style>';
     }
 
     // Validate fields

@@ -91,7 +91,7 @@ class Cowpay_Server_Callback
         $order = $this->find_order($merchant_reference_id);
         if ($order !== false) {
             // order already exists
-            $order->add_order_note(__("server callback update: created at the server"));
+            $order->add_order_note(__("server callback update: created at the server",'woo-cowpay'));
             return;
         }
         $this->create_order_recovery($data);
@@ -109,7 +109,7 @@ class Cowpay_Server_Callback
         $order->add_meta_data("cp_merchant_reference_id", $merchant_reference_id);
         $order->add_meta_data("cp_amount", $data['amount']);
         $order->add_meta_data("cp_cowpay_reference_id", $data['cowpay_reference_id']);
-        $order->add_order_note(esc_html__("Order created using server callback"));
+        $order->add_order_note(esc_html__("Order created using server callback",'woo-cowpay'));
         return $order;
     }
 
@@ -135,7 +135,7 @@ class Cowpay_Server_Callback
         $order->payment_complete();
         $admin_complete_order_status = $this->settings->get_order_status();
         $order->update_status($admin_complete_order_status);
-        $order->add_order_note(esc_html__('server callback update: Successfully paid'));
+        $order->add_order_note(esc_html__('server callback update: Successfully paid','woo-cowpay'));
     }
 
     private function handle_expired($data)
@@ -148,7 +148,7 @@ class Cowpay_Server_Callback
             return;
         }
         $order->update_status("wc-cancelled");
-        $order->add_order_note(__('server callback update: The order was expired'));
+        $order->add_order_note(__('server callback update: The order was expired','woo-cowpay'));
     }
 
     private function handle_failed($data)
@@ -161,7 +161,7 @@ class Cowpay_Server_Callback
             return;
         }
         $order->update_status("wc-cancelled");
-        $order->add_order_note(esc_html__('server callback update: The order was failed'));
+        $order->add_order_note(esc_html__('server callback update: The order was failed','woo-cowpay'));
     }
 
     private function is_valid_signature($payload)

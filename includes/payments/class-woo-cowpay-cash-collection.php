@@ -20,13 +20,13 @@ class WC_Payment_Gateway_Cowpay_Cash_Collection extends WC_Payment_Gateway_Cowpa
         $this->id = "cowpay_cash_collection";
 
         // The Title shown on the top of the Payment Gateways Page next to all the other Payment Gateways
-        $this->method_title = esc_html__("Cowpay Cash Collection", 'cowpay');
+        $this->method_title = esc_html__("Cowpay Cash Collection", 'woo-cowpay');
 
         // The description for this Payment Gateway, shown on the actual Payment options page on the backend
-        $this->method_description = esc_html__("Cowpay Cash Collection Payment Gateway for WooCommerce", 'cowpay');
+        $this->method_description = esc_html__("Cowpay Cash Collection Payment Gateway for WooCommerce", 'woo-cowpay');
 
         // The title to be used for the vertical tabs that can be ordered top to bottom
-        $this->title = esc_html__("Cowpay Cash Collection", 'cowpay');
+        $this->title = esc_html__("Cowpay Cash Collection", 'woo-cowpay');
 
         // If you want to show an image next to the gateway's name on the frontend, enter a URL to an image.
         $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/visa.svg';
@@ -73,22 +73,22 @@ class WC_Payment_Gateway_Cowpay_Cash_Collection extends WC_Payment_Gateway_Cowpa
     {
         $this->form_fields = array(
             'enabled' => array(
-                'title'        => esc_html__('Enable / Disable', 'cowpay'),
-                'label'        => esc_html__('Enable this payment gateway', 'cowpay'),
+                'title'        => esc_html__('Enable / Disable', 'woo-cowpay'),
+                'label'        => esc_html__('Enable this payment gateway', 'woo-cowpay'),
                 'type'        => 'checkbox',
                 'default'    => 'no',
             ),
             'title' => array(
-                'title'        => esc_html__('Title', 'cowpay'),
+                'title'        => esc_html__('Title', 'woo-cowpay'),
                 'type'        => 'text',
-                'desc_tip'    => esc_html__('Payment title the customer will see during the checkout process.', 'cowpay'),
-                'default'    => esc_html__('Cash Collection', 'cowpay'),
+                'desc_tip'    => esc_html__('Payment title the customer will see during the checkout process.', 'woo-cowpay'),
+                'default'    => esc_html__('Cash Collection', 'woo-cowpay'),
             ),
             'description' => array(
-                'title'        => esc_html__('Description', 'cowpay'),
+                'title'        => esc_html__('Description', 'woo-cowpay'),
                 'type'        => 'textarea',
-                'desc_tip'    => esc_html__('Payment description the customer will see during the checkout process.', 'cowpay'),
-                'default'    => esc_html__('Pay securely using your Cash Collection.', 'cowpay'),
+                'desc_tip'    => esc_html__('Payment description the customer will see during the checkout process.', 'woo-cowpay'),
+                'default'    => esc_html__('Pay securely using your Cash Collection.', 'woo-cowpay'),
                 'css'        => 'max-width:350px;'
             ),
         );
@@ -112,7 +112,7 @@ class WC_Payment_Gateway_Cowpay_Cash_Collection extends WC_Payment_Gateway_Cowpa
         $appartment = $_POST['cowpay_cash_collection-appartment'];
         $city_code = $this->get_city_code($customer_order);
         if(!$city_code){
-            wc_add_notice("this payment method dose not support this area", "error");
+            wc_add_notice(__("this payment method dose not support this area",'woo-cowpay'), "error");
         }
         $request_params = array(
             // redirect user to our controller to check otp response
@@ -246,8 +246,6 @@ class WC_Payment_Gateway_Cowpay_Cash_Collection extends WC_Payment_Gateway_Cowpa
         } else {
             $this->form();
         }
-        echo '<style> .form-row.woocommerce-SavedPaymentMethods-saveNew {
-    	display: none !important;}</style>';
     }
 
     // Validate fields
@@ -271,16 +269,5 @@ class WC_Payment_Gateway_Cowpay_Cash_Collection extends WC_Payment_Gateway_Cowpa
     {
         $host = $this->cp_admin_settings->get_active_host();
         $schema = is_ssl() ? "https" : "http";
-        wp_enqueue_script('cowpay_card_js', "$schema://$host/js/plugins/CardPlugin.js");
-        // wp_enqueue_script('cowpay_otp_js', "$schema://$host/js/plugins/OTPPaymentPlugin.js");
-        wp_enqueue_script('woo-cowpay', WOO_COWPAY_PLUGIN_URL . 'public/js/woo-cowpay-public.js');
-
-        wp_enqueue_style('cowpay_public_css', WOO_COWPAY_PLUGIN_URL . 'public/css/woo-cowpay-public.css');
-
-        // Pass ajax_url to cowpay_js
-        // this line will pass `admin_url('admin-ajax.php')` value to be accessed through
-        // plugin_ajax_object.ajax_url in javascipt file with the handle cowpay_js (the one above)
-        // wp_localize_script('cowpay_js', 'cowpay_data', array('ajax_url' => admin_url('admin-ajax.php')));
-        
     }
 }

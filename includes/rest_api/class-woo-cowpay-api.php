@@ -118,7 +118,7 @@ class WC_Gateway_Cowpay_API_Handler
         if (is_wp_error($raw_response)) {
             return $raw_response;
         } elseif (empty($raw_response['body'])) {
-            return new WP_Error('cowpay_api_empty_response', __('Server Error, empty response'));
+            return new WP_Error('cowpay_api_empty_response', __('Server Error, empty response','woo-cowpay'));
         }
         $objResponse = json_decode($raw_response['body']);
         if ($objResponse->status_code == 200) return $objResponse;
@@ -149,7 +149,7 @@ class WC_Gateway_Cowpay_API_Handler
         if (is_wp_error($raw_response)) {
             return $raw_response;
         } elseif (empty($raw_response['body'])) {
-            return new WP_Error('cowpay_api_empty_response', __('Server Error, empty response'));
+            return new WP_Error('cowpay_api_empty_response', __('Server Error, empty response','woo-cowpay'));
         }
         $objResponse = json_decode($raw_response['body']);
         if ($objResponse->status_code == 200) return $objResponse;

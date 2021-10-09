@@ -108,22 +108,22 @@ class WC_Payment_Gateway_Cowpay_Checkout extends WC_Payment_Gateway_Cowpay
     {
         $this->form_fields = array(
             'enabled' => array(
-                'title'        => esc_html__('Enable / Disable', 'cowpay'),
-                'label'        => esc_html__('Enable this payment gateway', 'cowpay'),
+                'title'        => esc_html__('Enable / Disable', 'woo-cowpay'),
+                'label'        => esc_html__('Enable this payment gateway', 'woo-cowpay'),
                 'type'        => 'checkbox',
                 'default'    => 'no',
             ),
             'title' => array(
-                'title'        => esc_html__('Title', 'cowpay'),
+                'title'        => esc_html__('Title', 'woo-cowpay'),
                 'type'        => 'text',
-                'desc_tip'    => esc_html__('Payment title the customer will see during the checkout process.', 'cowpay'),
-                'default'    => esc_html__('Cowpay Checkout', 'cowpay'),
+                'desc_tip'    => esc_html__('Payment title the customer will see during the checkout process.', 'woo-cowpay'),
+                'default'    => esc_html__('Cowpay Checkout', 'woo-cowpay'),
             ),
             'description' => array(
-                'title'        => esc_html__('Description', 'cowpay'),
+                'title'        => esc_html__('Description', 'woo-cowpay'),
                 'type'        => 'textarea',
-                'desc_tip'    => esc_html__('Payment description the customer will see during the checkout process.', 'cowpay'),
-                'default'    => esc_html__('Pay securely using your credit card.', 'cowpay'),
+                'desc_tip'    => esc_html__('Payment description the customer will see during the checkout process.', 'woo-cowpay'),
+                'default'    => esc_html__('Pay securely using your credit card.', 'woo-cowpay'),
                 'css'        => 'max-width:350px;'
             ),
         );
