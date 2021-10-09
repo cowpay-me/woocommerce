@@ -112,7 +112,7 @@ class WC_Payment_Gateway_Cowpay_Cash_Collection extends WC_Payment_Gateway_Cowpa
         $appartment = $_POST['cowpay_cash_collection-appartment'];
         $city_code = $this->get_city_code($customer_order);
         if(!$city_code){
-            // return error 
+            wc_add_notice("this payment method dose not support this area", "error");
         }
         $request_params = array(
             // redirect user to our controller to check otp response
