@@ -40,7 +40,7 @@ class WooCowpay
 	 */
 	protected $loader;
 
-	private Woo_Bridge $woo_bridge;
+	private $woo_bridge;
 
 	/**
 	 * The unique identifier of this plugin.
