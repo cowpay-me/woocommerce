@@ -8,11 +8,10 @@
 class WC_Gateway_Cowpay_API_Handler
 {
     private static ?WC_Gateway_Cowpay_API_Handler $instance = null;
-    private Cowpay_Admin_Settings $settings;
+    private $settings;
 
     protected static $production_host = 'cowpay.me';
     protected static $staging_host = 'staging.cowpay.me';
-    // protected static $staging_host = 'dev.cowpay.me';
     protected static $endpoint_charge_fawry = 'api/v1/charge/fawry';
     protected static $endpoint_charge_cc = 'api/v2/charge/card/init';
     protected static $endpoint_charge_cash_collection = 'api/v1/charge/cash-collection';

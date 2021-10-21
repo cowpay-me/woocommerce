@@ -6,7 +6,7 @@
 class Woo_Bridge
 {
 
-    private WooCowpayLoader $loader;
+    private $loader;
     function __construct(WooCowpayLoader $loader)
     {
         $this->loader = $loader;

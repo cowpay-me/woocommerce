@@ -6,7 +6,7 @@
 abstract class WC_Payment_Gateway_Cowpay extends WC_Payment_Gateway
 {
     public $require_ssl = false;
-    public Cowpay_Admin_Settings $cp_admin_settings;
+    public $cp_admin_settings;
 
     function __construct()
     {
@@ -113,7 +113,7 @@ abstract class WC_Payment_Gateway_Cowpay extends WC_Payment_Gateway
         $setOrderMeta("cp_is_3ds", $is_3ds);
         if (isset($response->payment_gateway_reference_id)) {
             $setOrderMeta("cp_payment_gateway_reference_id", $response->payment_gateway_reference_id);
-        }elseif (isset($response['payment_gateway_reference_id'])) {
+        }elseif (is_array($response) && @isset($response['payment_gateway_reference_id'])) {
             $setOrderMeta("cp_payment_gateway_reference_id", $response['payment_gateway_reference_id']);
         }
         
