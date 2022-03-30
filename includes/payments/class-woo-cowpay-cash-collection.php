@@ -29,7 +29,7 @@ class WC_Payment_Gateway_Cowpay_Cash_Collection extends WC_Payment_Gateway_Cowpa
         $this->title = esc_html__("Cowpay Cash Collection", 'woo-cowpay');
 
         // If you want to show an image next to the gateway's name on the frontend, enter a URL to an image.
-        $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/visa.svg';
+        $this->icon = WOO_COWPAY_PLUGIN_URL . '/public/images/cash_collection.png';
 
         // Bool. Can be set to true if you want payment fields to show on the checkout 
         // if doing a direct integration, which we are doing in this case
