@@ -103,7 +103,12 @@ class WC_Payment_Gateway_Cowpay_POS_Fawry extends WC_Payment_Gateway_Cowpay
 
             // display to the admin
             $customer_order->add_order_note(__($response->status_description));
-
+            WC()->cart->empty_cart();
+            if ( ! session_id() ) {
+                session_start();
+            }
+        
+            $_SESSION['fawryDetails'] = $response;// An array
             WC()->cart->empty_cart();
 
             return array(

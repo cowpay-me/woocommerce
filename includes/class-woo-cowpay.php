@@ -82,7 +82,7 @@ class WooCowpay
 
 		$this->load_dependencies();
 		$this->set_locale();
-
+		$this->handleThankyouPage();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 	}
@@ -164,7 +164,28 @@ class WooCowpay
 
 		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 	}
-
+	private function handleThankyouPage(){
+		if ( ! session_id() ) {
+			session_start();
+		}
+        if (isset($_SESSION['fawryDetails'])) {
+            $this->loader->add_filter('woocommerce_thankyou_order_received_text', $this, 'woo_title_order_received');
+        }
+	}
+	function woo_title_order_received() {
+		if ( ! session_id() ) {
+			session_start();
+		}
+	
+        if (isset($_SESSION['fawryDetails'])) {
+            $title = "Thank you , Your order has been received .<br>Please use the following reference number 
+			<b>[".$_SESSION['fawryDetails']->payment_gateway_reference_id."]</b> 
+			to pay <b>[".$_SESSION['fawryDetails']->amount."]EGP</b>  at the nearest fawry outlet";
+            unset($_SESSION['fawryDetails']);
+			
+			return $title;
+		}
+    }
 	/**
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
